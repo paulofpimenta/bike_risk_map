@@ -32,8 +32,7 @@ months_order = ['janvier', 'février', 'mars', 'avril',
           'mai', 'juin', 'juillet', 'août',
           'septembre', 'octobre', 'novembre', 'décembre']
 
-# zones_df = pd.read_csv()
-# 48.86260697107489, 2.346794478444374
+
 with open("./data/zones.json") as response:
     zones = json.load(response)
 
@@ -57,7 +56,6 @@ for year in available_years:
     year_month_dict[year] = [months for _, months in sorted(zip(months_order, months))]
 
 names = list(year_month_dict.keys())
-nestedOptions = year_month_dict[names[0]]
 
 controls = dbc.Card(
     [
@@ -66,7 +64,7 @@ controls = dbc.Card(
                 dbc.Label("Year"),
                 dcc.Dropdown(
                     id='year_dropdown',
-                    options=[{'label':name, 'value':name} for name in names],
+                    options=[{'label':year, 'value': year} for year in available_years],
                     multi=False,
                     clearable=False,
                     value = list(year_month_dict.keys())[0],
@@ -75,6 +73,7 @@ controls = dbc.Card(
                 dbc.Label("Month"),
                 dcc.Dropdown(
                     id='month_dropdown',
+                    multi=False,
                     clearable=False,
                     style={"width": "40%","height": "100%"}
                 ),
@@ -84,22 +83,22 @@ controls = dbc.Card(
         html.Div(
             [
                 dbc.Label("Gravity"),
-                dcc.RadioItems(
+                dbc.Checklist(
                     id='radio_gravity', 
                     options=["1", "2", "3","4"],
                     value="2",
                     inline=True
                 ),
                 dbc.Label("Show accident's locations ?"),
-                dcc.Checklist(
-                    id="check_show_accidents",
-                    options={
-                        'Yes': True,
-                        'No': False
-                        },
-                    value=['No'],
-                    inline=True
-                )
+                # Switch to enable/disable accidents point layer
+                dbc.Checklist(
+                    options=[
+                        {"label": "Enable / Disable", "value": True},
+                    ],
+                    value=False,
+                    id="accidents_switch",
+                    switch=True
+                ),
             ]
         ),
         html.Br(),
@@ -138,17 +137,21 @@ app.layout = dbc.Container(
 )
 
 @app.callback(
-    dash.dependencies.Output('month_dropdown', 'options'),
-    [dash.dependencies.Input('year_dropdown', 'value')]
+    Output('month_dropdown', 'options'),
+    [Input('year_dropdown', 'value')]
 )
-def update_date_dropdown(name):
+def update_date_dropdown(selected_year):
     months_dict = {'janvier': 0, 'février': 1, 'mars': 2, 'avril': 3, 'mai': 4, 'juin': 5, 'juillet': 6, 
     'août': 7, 'septembre': 8, 'octobre': 9, 'novembre': 10, 'décembre': 11}
-    ordered_month_list = sorted(year_month_dict[name], key=lambda x: months_dict[x.lower()])
-
+    ordered_month_list = sorted(year_month_dict[selected_year], key=lambda x: months_dict[x.lower()])
 
     return [{'label': i, 'value': i} for i in ordered_month_list]
 
+@callback(
+    Output('month_dropdown', 'value'),
+    Input('month_dropdown', 'options'))
+def update_month_drowdown(available_options):
+    return available_options[0]['value']
 
 
 # Callback functions
@@ -158,8 +161,9 @@ def update_date_dropdown(name):
     [Input("month_dropdown", "value"),
      Input("year_dropdown", "value")])
 def months_and_hours_graph(month,year):
-    selected_month = month if month else 'janvier'
     selected_year = year if year else 2011
+    selected_month = month if month else year_month_dict[selected_year][0]
+
     print("Selected year and month : " ,selected_year,selected_month)
     # Filter year
     accidents_paris_ll_by_year = accidents_paris_ll.loc[(accidents_paris_ll['an'] == int(selected_year))]
@@ -171,7 +175,7 @@ def months_and_hours_graph(month,year):
     # Group and sort accidents by hour
     accidents_paris_grouped_hour = accidents_paris_ll_by_year_month.sort_values('hour', ascending=True).groupby('hour').size().reset_index(name ='Accidents')
     
-    months_graph = px.line(accidents_paris_sorted_month_grouped, x='mois', y='Accidents', )
+    months_graph = px.line(accidents_paris_sorted_month_grouped, x='mois', y='Accidents')
     months_graph.update_layout(
         title={
             'text': "Accidents in <b>" + str(selected_year) + "</b>",
@@ -188,14 +192,17 @@ def months_and_hours_graph(month,year):
             'xanchor': 'center',
             'yanchor': 'top'})
 
+    
     return months_graph, hours_graph
+    
 
 
 @app.callback(
      Output("map_graph", "figure"),
-     [Input("month_dropdown", "value")],
+     [Input("month_dropdown", "value"),
+     Input("accidents_switch", "value")],
  )
-def display_selected_data(points_month):
+def display_selected_data(points_month,accidents_switch):
     color_continuous_scale=["green", "yellow", "orange","red"]
     #month = selected_month if selected_month else "janvier"
     #points_month = zones_gdf.query("month_list == @month_list")
@@ -204,19 +211,22 @@ def display_selected_data(points_month):
     #    points_month = points_month.loc[indices]
     fig = px.choropleth_mapbox(accidents_data, geojson=zones_gdf,
                         locations="index",
-                        labels={"num_acc_by_area": "number of accidents"},
+                        labels={"num_acc_by_area": "Accidents"},
                         color_continuous_scale=color_continuous_scale,
                         color='num_acc_by_area',
                         zoom=11, center = {"lat": 48.85848828830715, "lon": 2.351379571148244},
                         template='seaborn',
                         mapbox_style="open-street-map",
                         opacity=0.6,
-                        hover_name="index", 
+                        hover_name=None,
+                        #animation_frame="grav_mean",
                         hover_data={'index':False})            
-    fig.update_geos(fitbounds="locations", visible=False)
+    fig.update_geos(fitbounds="locations")
+    fig.update_traces(marker_line_width = 1, marker_line_color = 'black')
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-    fig.add_scattermapbox(lat=lats, lon=lons, marker_size=6, marker_color='rgb(0, 0, 0)',opacity=0.3,hoverinfo = "skip")
+    if accidents_switch:
+        fig.add_scattermapbox(lat=lats, lon=lons, marker_size=6, marker_color='rgb(0, 0, 0)',opacity=0.3,hoverinfo = "skip")
     
     return fig
 
