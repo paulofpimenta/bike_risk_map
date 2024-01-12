@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 import dash
 from itertools import product 
 import datetime
+import calendar
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
@@ -28,10 +29,15 @@ accidents_paris_ll = gpd.read_file("./data/accidents_paris_ll.geojson")
 lats = accidents_paris_ll.get_coordinates().y.to_list()
 lons = accidents_paris_ll.get_coordinates().x.to_list()
 
-months_order = ['janvier', 'février', 'mars', 'avril',
+months_order_fr = ['janvier', 'février', 'mars', 'avril',
           'mai', 'juin', 'juillet', 'août',
           'septembre', 'octobre', 'novembre', 'décembre']
+months_dict = {'janvier': 0, 'février': 1, 'mars': 2, 'avril': 3, 'mai': 4, 'juin': 5, 'juillet': 6, 
+'août': 7, 'septembre': 8, 'octobre': 9, 'novembre': 10, 'décembre': 11}
 
+month_names_en = [calendar.month_name[i] for i in range(1, 13)]
+
+ordered_month_list_translated = {month_names_en[i]:month_fr for i,month_fr in enumerate(months_order_fr)}
 
 with open("./data/zones.json") as response:
     zones = json.load(response)
@@ -50,12 +56,15 @@ SIDEBAR_STYLE = {
 available_years = [years for years in accidents_paris_ll['an'].unique()]
 
 year_month_dict = {}
-
 for year in available_years:
     months = accidents_paris_ll[accidents_paris_ll['an'] == year]['mois'].unique().tolist()
-    year_month_dict[year] = [months for _, months in sorted(zip(months_order, months))]
+    year_month_dict[year] = [months for _, months in sorted(zip(months_order_fr, months))]
 
-names = list(year_month_dict.keys())
+# for year, month_list in year_month_dict.items():
+#    new_month_list = []
+#    for month in month_list:
+#        new_month_list.append(months_fr_en[month])
+#    year_month_dict[year] = new_month_list
 
 controls = dbc.Card(
     [
@@ -68,27 +77,27 @@ controls = dbc.Card(
                     multi=False,
                     clearable=False,
                     value = list(year_month_dict.keys())[0],
-                    style={"width": "40%","height": "100%"}
+                    style={"width": "70%"}
                 ),
+                html.Br(),
                 dbc.Label("Month"),
                 dcc.Dropdown(
                     id='month_dropdown',
                     multi=False,
                     clearable=False,
-                    style={"width": "40%","height": "100%"}
+                    style={"width": "70%"}
                 ),
-            ], style={'top': '0'}
-        ),
-        html.Br(),
-        html.Div(
-            [
-                dbc.Label("Gravity"),
-                dbc.Checklist(
-                    id='radio_gravity', 
-                    options=["1", "2", "3","4"],
-                    value="2",
-                    inline=True
+                html.Br(),
+                dbc.Label("Aggregate accidents by : "),
+                dbc.RadioItems(
+                    id="aggmap_radioitems",
+                    options=[
+                        {"label": "Total number", "value": 'num_acc_by_area'},
+                        {"label": "Gravity", "value": 'grav_mean'},
+                    ],
+                value='num_acc_by_area',
                 ),
+                html.Br(),
                 dbc.Label("Show accident's locations ?"),
                 # Switch to enable/disable accidents point layer
                 dbc.Checklist(
@@ -98,21 +107,13 @@ controls = dbc.Card(
                     value=False,
                     id="accidents_switch",
                     switch=True
-                ),
+                )
             ]
-        ),
-        html.Br(),
-        html.Div(
-            [
-                dbc.Label("Cluster count"),
-                dbc.Input(id="cluster-count", type="number", value=3),
-            ]
-        ),
+        )
     ],
     body=True,
-    style={'height': "100%"}
-)
-
+    style={"height": "100%"}
+),
 
 app.layout = dbc.Container(
     [
@@ -120,8 +121,8 @@ app.layout = dbc.Container(
         html.Hr(),
         dbc.Row(
             [
-                dbc.Col(controls, md=5),
-                dbc.Col(dcc.Graph(id="map_graph"), md=7),
+                dbc.Col(controls, md=3),
+                dbc.Col(dcc.Graph(id="map_graph"), md=9),
             ],
             align="top",
         ),
@@ -141,11 +142,10 @@ app.layout = dbc.Container(
     [Input('year_dropdown', 'value')]
 )
 def update_date_dropdown(selected_year):
-    months_dict = {'janvier': 0, 'février': 1, 'mars': 2, 'avril': 3, 'mai': 4, 'juin': 5, 'juillet': 6, 
-    'août': 7, 'septembre': 8, 'octobre': 9, 'novembre': 10, 'décembre': 11}
     ordered_month_list = sorted(year_month_dict[selected_year], key=lambda x: months_dict[x.lower()])
-
-    return [{'label': i, 'value': i} for i in ordered_month_list]
+    # Translate to english
+    translated_month_list = {month_names_en[months_dict[month_fr]]: month_fr for month_fr in ordered_month_list}
+    return [{'label': en, 'value': fr} for en, fr in translated_month_list.items()]
 
 @callback(
     Output('month_dropdown', 'value'),
@@ -163,15 +163,15 @@ def update_month_drowdown(available_options):
 def months_and_hours_graph(month,year):
     selected_year = year if year else 2011
     selected_month = month if month else year_month_dict[selected_year][0]
-
-    print("Selected year and month : " ,selected_year,selected_month)
+    selected_month_en = month_names_en[months_dict[month]]
+    print("Selected year and month(en) and month (fr) : " , selected_year,selected_month,selected_month_en)
     # Filter year
     accidents_paris_ll_by_year = accidents_paris_ll.loc[(accidents_paris_ll['an'] == int(selected_year))]
     # Filter month
     accidents_paris_ll_by_year_month = accidents_paris_ll.loc[(accidents_paris_ll['an'] == int(selected_year)) & (accidents_paris_ll['mois'] == selected_month)]
     # Group and sort accidents by month
     accidents_paris_sorted_month = accidents_paris_ll_by_year.sort_values('mois', ascending=True).groupby('mois').size().reset_index(name ='Accidents')
-    accidents_paris_sorted_month_grouped = accidents_paris_sorted_month.sort_values('mois', key=lambda s: s.apply(months_order.index), ignore_index=True)
+    accidents_paris_sorted_month_grouped = accidents_paris_sorted_month.sort_values('mois', key=lambda s: s.apply(months_order_fr.index), ignore_index=True)
     # Group and sort accidents by hour
     accidents_paris_grouped_hour = accidents_paris_ll_by_year_month.sort_values('hour', ascending=True).groupby('hour').size().reset_index(name ='Accidents')
     
@@ -186,7 +186,7 @@ def months_and_hours_graph(month,year):
     hours_graph = px.line(accidents_paris_grouped_hour, x='hour', y='Accidents')
     hours_graph.update_layout(
         title={
-            'text': "Accidents in <b>" + selected_month + "</b> per day hour",
+            'text': "Accidents in <b>" + selected_month_en + "</b> by hour of day",
             'y':0.94,
             'x':0.5,
             'xanchor': 'center',
@@ -200,34 +200,32 @@ def months_and_hours_graph(month,year):
 @app.callback(
      Output("map_graph", "figure"),
      [Input("month_dropdown", "value"),
-     Input("accidents_switch", "value")],
+     Input("accidents_switch", "value"),
+     Input("aggmap_radioitems", "value")],
  )
-def display_selected_data(points_month,accidents_switch):
+def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
     color_continuous_scale=["green", "yellow", "orange","red"]
-    #month = selected_month if selected_month else "janvier"
-    #points_month = zones_gdf.query("month_list == @month_list")
-    #if selectedData:
-    #    indices = [point["customdata"][0] for point in selectedData["points"]]
-    #    points_month = points_month.loc[indices]
+    print("Selected agg map : ", agg_data_radioitem)
+    label_hover = "Accidents" if agg_data_radioitem == 'num_acc_by_area' else "Gravity"
     fig = px.choropleth_mapbox(accidents_data, geojson=zones_gdf,
                         locations="index",
-                        labels={"num_acc_by_area": "Accidents"},
+                        labels={agg_data_radioitem: label_hover},
                         color_continuous_scale=color_continuous_scale,
-                        color='num_acc_by_area',
-                        zoom=11, center = {"lat": 48.85848828830715, "lon": 2.351379571148244},
+                        color=agg_data_radioitem,
+                        zoom=11, center={"lat": 48.85848828830715, "lon": 2.351379571148244},
                         template='seaborn',
                         mapbox_style="open-street-map",
                         opacity=0.6,
                         hover_name=None,
                         #animation_frame="grav_mean",
-                        hover_data={'index':False})            
+                        hover_data={'index': False})            
     fig.update_geos(fitbounds="locations")
     fig.update_traces(marker_line_width = 1, marker_line_color = 'black')
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     if accidents_switch:
         fig.add_scattermapbox(lat=lats, lon=lons, marker_size=6, marker_color='rgb(0, 0, 0)',opacity=0.3,hoverinfo = "skip")
-    
+
     return fig
 
 
