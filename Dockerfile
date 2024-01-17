@@ -1,13 +1,12 @@
-FROM ghcr.io/osgeo/gdal:ubuntu-small-latest
+FROM python:3.8-slim-buster
 
 RUN apt-get update
-RUN apt-get install -y nano \
-    python3-pip
+RUN apt-get install nano
 
 
 RUN mkdir wd
 WORKDIR wd
-COPY requirements.txt .
+COPY app/requirements.txt .
 RUN pip3 install -r requirements.txt
 
 COPY app/ ./
