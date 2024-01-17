@@ -3,12 +3,17 @@ FROM python:3.10-slim-buster
 RUN apt-get update
 RUN apt-get install nano
 
+# Update pip 
+RUN pip install --upgrade pip
 
 # Install GDAL dependencies
-RUN apt-get update \
-    && apt-get install -y binutils libproj-dev gdal-bin
+RUN sudo apt-get install libgdal-dev libgdal1h
 
-RUN pip install --upgrade pip
+# Export to C compilers
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
+
+
 
 RUN mkdir wd
 WORKDIR wd
