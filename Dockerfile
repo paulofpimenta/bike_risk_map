@@ -5,10 +5,10 @@ RUN apt-get update
 
 RUN mkdir wd
 WORKDIR wd
-COPY app/requirements.txt .
+COPY application/requirements.txt .
 RUN pip3 install -r requirements.txt
 
-COPY app/ ./
+COPY application/ ./
 
 #CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:80", "app:server"]
 #CMD ["waitress-serve" "--host=0.0.0.0" "--port=80"  "appname:app.server"]
