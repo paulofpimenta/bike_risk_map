@@ -1,7 +1,20 @@
-web:
-    build: .
-    image: web
-    container_name: web
+version: '3.7'
+services:
+
+  dashboard:
+    build: 
+      context: ./
+    container_name: ${COMPOSE_PROJECT_NAME}_dashboard
+    hostname: ${COMPOSE_PROJECT_NAME}_dashboard
+    restart: always
     ports:
-      - 8080:8080
+      - 5000:80
+    networks:
+      - network 
     command: waitress-serve --call "application:create_app"
+
+
+      
+networks:
+  network:
+    driver: bridge
