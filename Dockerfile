@@ -1,4 +1,4 @@
-FROM gdal-python:3.6-shippable
+FROM geodata/gdal
 
 RUN apt-get update
 RUN apt-get install nano
