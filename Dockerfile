@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM gdal-python:3.6-shippable
 
 RUN apt-get update
 RUN apt-get install nano
@@ -7,11 +7,11 @@ RUN apt-get install nano
 RUN pip install --upgrade pip
 
 # Install GDAL dependencies
-RUN sudo apt-get install libgdal-dev libgdal1h
+#RUN sudo apt-get install libgdal-dev libgdal1h
 
 # Export to C compilers
-export CPLUS_INCLUDE_PATH=/usr/include/gdal
-export C_INCLUDE_PATH=/usr/include/gdal
+#ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+#ENV C_INCLUDE_PATH=/usr/include/gdal
 
 
 
