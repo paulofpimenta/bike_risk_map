@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get install nano
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.10 \
+    python3 \
     python3-pip \
     && \
     apt-get clean && \
