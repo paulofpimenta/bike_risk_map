@@ -1,4 +1,4 @@
-FROM osgeo/gdal:ubuntu-small-latest
+FROM ghcr.io/osgeo/gdal:ubuntu-small-latest
 
 RUN apt-get update
 RUN apt-get install nano
