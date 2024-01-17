@@ -224,8 +224,9 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
     return fig
 
-    def create_app():
-        return flask_app
+
+def create_app():
+    return flask_app
 
 
 if __name__ == "__main__":
