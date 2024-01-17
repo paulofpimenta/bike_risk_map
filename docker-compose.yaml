@@ -11,7 +11,7 @@ services:
       - 5000:80
     networks:
       - network 
-    command: waitress-serve --call "application:create_app"
+    command: waitress-serve --call "app:create_app"
 
 
       
