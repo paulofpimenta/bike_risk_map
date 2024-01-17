@@ -1,13 +1,14 @@
 FROM ghcr.io/osgeo/gdal:ubuntu-small-latest
 
 RUN apt-get update
-RUN apt-get install python3-pip
+RUN apt-get install -y nano \
+    python3-pip
 
 
 RUN mkdir wd
 WORKDIR wd
 COPY requirements.txt .
-RUN pip3 install -y -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY app/ ./
 
