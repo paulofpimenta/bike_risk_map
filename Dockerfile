@@ -8,7 +8,7 @@ RUN apt-get install nano \
 RUN mkdir wd
 WORKDIR wd
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+RUN pip3 install --yes -r requirements.txt
 
 COPY app/ ./
 
