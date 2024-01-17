@@ -3,15 +3,12 @@ FROM geodata/gdal
 RUN apt-get update
 RUN apt-get install nano
 
-# Update pip 
-#RUN pip install --upgrade pip
-
-# Install GDAL dependencies
-#RUN sudo apt-get install libgdal-dev libgdal1h
-
-# Export to C compilers
-#ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
-#ENV C_INCLUDE_PATH=/usr/include/gdal
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3-pip \
+    && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 
 
