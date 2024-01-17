@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get install nano
 
 # Update pip 
-RUN pip install --upgrade pip
+#RUN pip install --upgrade pip
 
 # Install GDAL dependencies
 #RUN sudo apt-get install libgdal-dev libgdal1h
