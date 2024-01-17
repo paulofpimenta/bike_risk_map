@@ -1,7 +1,8 @@
 FROM ghcr.io/osgeo/gdal:ubuntu-small-latest
 
 RUN apt-get update
-RUN apt-get install nano
+RUN apt-get install nano \
+    python3-pip
 
 
 RUN mkdir wd
