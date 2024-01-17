@@ -230,4 +230,4 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
 if __name__ == "__main__":
     from waitress import serve
-    serve(flask_app, host="0.0.0.0", port=8080)
+    serve(flask_app, host="0.0.0.0", port=80)
