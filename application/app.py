@@ -11,8 +11,8 @@ import waitress
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 
-flask_app = Flask(__name__)
-dash_app = Dash(__name__, server=flask_app, port=80,
+flask_app = Flask(__name__, port=80)
+dash_app = Dash(__name__, server=flask_app,
                 external_stylesheets=external_stylesheets)
 #server = flask_app.server
 
