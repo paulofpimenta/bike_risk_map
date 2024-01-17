@@ -3,9 +3,12 @@ FROM python:3.10-slim-buster
 RUN apt-get update
 RUN apt-get install nano
 
+
 # Install GDAL dependencies
-RUN apt-get update &&\
-    apt-get install -y binutils libproj-dev gdal-bin
+RUN apt-get update \
+    && apt-get install -y binutils libproj-dev gdal-bin
+
+RUN pip install --upgrade pip
 
 RUN mkdir wd
 WORKDIR wd
