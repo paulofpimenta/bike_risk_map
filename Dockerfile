@@ -1,9 +1,8 @@
-FROM geodata/gdal
+FROM gdal:ubuntu-small-latest
 
 RUN apt-get update
 RUN apt-get install nano
 
-RUN apt-get update && apt-get install -y python3-pip
 
 RUN mkdir wd
 WORKDIR wd
