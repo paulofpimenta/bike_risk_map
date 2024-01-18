@@ -21,5 +21,4 @@ WORKDIR wd
 
 #CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:80", "app:server"]
 #CMD ["waitress-serve" "--host=0.0.0.0" "--port=80"  "appname:app.server"]
-#CMD ["waitress-serve" "--host=0.0.0.0" "appname:app.server", "port:5000", "url_scheme:https"]
-#CMD [ "python3", "./app.py"]
+CMD ["waitress-serve" "--host=0.0.0.0" "app:create_app", "port:5000", "url_scheme:https"]
