@@ -24,8 +24,8 @@ def list_subdirectories(path):
 subdirectories = list_subdirectories(dname)
 print(subdirectories)
 
-
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+app = Flask(__name__)
+dash_app = Dash(__name__, server=app, external_stylesheets=external_stylesheets)
 
 accidents_data = pd.read_csv("app_data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
@@ -122,7 +122,7 @@ controls = dbc.Card(
     style={"height": "100%"}
 ),
 
-app.layout = dbc.Container(
+dash_app.layout = dbc.Container(
     [
         html.H1("Bicycle accidents in Paris", style={'textAlign': 'center'}),
         html.Hr(),
@@ -144,7 +144,7 @@ app.layout = dbc.Container(
     fluid=True,
 )
 
-@app.callback(
+@dash_app.callback(
     Output('month_dropdown', 'options'),
     [Input('year_dropdown', 'value')]
 )
@@ -161,7 +161,7 @@ def update_month_drowdown(available_options):
     return available_options[0]['value']
 
 # Callback functions
-@app.callback(
+@dash_app.callback(
     [Output(component_id="month_graph", component_property="figure"),
      Output(component_id="hours_graph", component_property="figure")],
     [Input("month_dropdown", "value"),
@@ -199,7 +199,7 @@ def months_and_hours_graph(month, year):
             'yanchor': 'top'})
     return months_graph, hours_graph
 
-@app.callback(
+@dash_app.callback(
      Output("map_graph", "figure"),
      [Input("month_dropdown", "value"),
      Input("accidents_switch", "value"),
