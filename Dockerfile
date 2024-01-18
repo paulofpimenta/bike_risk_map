@@ -1,4 +1,4 @@
-FROM nginx:1.15-alpine
+FROM nginx/unit:1.23.0-python3.9
 
 #RUN add-apt-repository ppa:certbot/certbot
 RUN apt-get update
@@ -22,14 +22,14 @@ COPY application/server-conf/nginx.conf /etc/nginx/
 COPY ./certs/ /etc/letsencrypt
 
 
-RUN pip3 install -r requirements.txt
-
+RUN apt update && apt install -y python3-pip                                 \
+    && pip3 install -r requirements.txt                               
+    && apt remove -y python3-pip                                              
+    && apt autoremove --purge -y                                              
+    && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
 
 RUN ls --recursive /wd/
 
+EXPOSE 80
 
-#CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:80", "app:server"]
-#CMD ["waitress-serve" "--host=0.0.0.0" "--port=80"  "appname:app.server"]
-#CMD ["waitress-serve","--host=0.0.0.0","--call","app:create_app", "port:5000", "url_scheme:https"]
-CMD ["nginx", "-g", "daemon off;"]
 CMD ["python3","app.py"]
