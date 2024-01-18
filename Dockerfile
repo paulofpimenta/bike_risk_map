@@ -2,7 +2,7 @@ FROM python:3.10-slim-buster
 
 #RUN add-apt-repository ppa:certbot/certbot
 RUN apt-get update
-RUN apt-get install python3-certbot-nginx supervisor
+RUN apt-get install -y python3-certbot-nginx supervisor
 RUN pip3 install uwsgi
 
 
