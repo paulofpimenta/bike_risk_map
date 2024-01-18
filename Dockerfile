@@ -1,6 +1,7 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.10
 
 COPY ./app /app
+WORKDIR /app
 #COPY app/server-conf/nginx.conf /etc/nginx/
 COPY ./certs/ /etc/letsencrypt
 
