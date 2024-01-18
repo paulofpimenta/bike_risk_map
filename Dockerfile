@@ -5,7 +5,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends python3-certbot-nginx
 RUN pip3 install --upgrade pip
 
-RUN letsencrypt certonly -a webroot --webroot-path=/var/www/app2.ouicodedata.com/html/ -d app2.ouicodedata.com -d www.app2.ouicodedata.com
+RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
 RUN mkdir wd
 
