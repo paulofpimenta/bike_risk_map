@@ -9,13 +9,7 @@ services:
     restart: always
     ports:
       - 5000:80
-    networks:
-      - network 
     command: waitress-serve --call "app:create_app"
-  
-networks:
-  network:
-    driver: bridge
 
   certbot:
     container_name: "certbot"
