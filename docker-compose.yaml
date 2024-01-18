@@ -1,10 +1,12 @@
-version: '3'
+version: "3.9"
 
 services:
-  webserver:
-    build: .
+  container_name: "web"
+  build:
+    context: .
+    dockerfile: ./docker/node/Dockerfile
     ports:
-      - "80:80"
+      - 80:80
     #  - 443:443
     #volumes:
     #  - ./docker/nginx/:/etc/nginx/conf.d
