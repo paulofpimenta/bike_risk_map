@@ -1,11 +1,12 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.10
 
+COPY ./app/requirements.txt /tmp/requirements.txt
 COPY ./app /app
-WORKDIR /app
+
 #COPY app/server-conf/nginx.conf /etc/nginx/
 COPY ./certs/ /etc/letsencrypt
 
-RUN pip install -U && pip install -r /app/requirements.txt
+RUN pip install -U && pip install -r /tmp/requirements.txt
 
 ENV NGINX_WORKER_PROCESSES auto
 # FROM tiangolo/uwsgi-nginx:python3.11
