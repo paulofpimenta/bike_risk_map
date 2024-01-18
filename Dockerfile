@@ -1,4 +1,6 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.10
+
+#Using python
+FROM python:3.9-slim
 
 COPY ./app /app
 
@@ -8,7 +10,9 @@ COPY ./certs/ /etc/letsencrypt
 COPY ./app/requirements.txt /tmp/
 RUN pip install --no-cache-dir --upgrade -r /tmp/requirements.txt
 
-ENV NGINX_WORKER_PROCESSES auto
+COPY . ./
+
+CMD gunicorn -b 0.0.0.0:80 app:server
 # FROM tiangolo/uwsgi-nginx:python3.11
 
 # WORKDIR /code

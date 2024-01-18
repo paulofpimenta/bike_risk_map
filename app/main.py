@@ -232,4 +232,4 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0", port=8080, use_reloader=False)
