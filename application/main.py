@@ -7,6 +7,7 @@ import dash_bootstrap_components as dbc
 import calendar
 from waitress import serve
 import os
+from flask import Flask
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 abspath = os.path.abspath(__file__)
@@ -24,9 +25,7 @@ subdirectories = list_subdirectories(dname)
 print(subdirectories)
 
 
-#app = Flask(__name__)
-
-dash_app = Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 accidents_data = pd.read_csv("app_data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
@@ -123,7 +122,7 @@ controls = dbc.Card(
     style={"height": "100%"}
 ),
 
-dash_app.layout = dbc.Container(
+app.layout = dbc.Container(
     [
         html.H1("Bicycle accidents in Paris", style={'textAlign': 'center'}),
         html.Hr(),
@@ -145,7 +144,7 @@ dash_app.layout = dbc.Container(
     fluid=True,
 )
 
-@dash_app.callback(
+@app.callback(
     Output('month_dropdown', 'options'),
     [Input('year_dropdown', 'value')]
 )
@@ -162,7 +161,7 @@ def update_month_drowdown(available_options):
     return available_options[0]['value']
 
 # Callback functions
-@dash_app.callback(
+@app.callback(
     [Output(component_id="month_graph", component_property="figure"),
      Output(component_id="hours_graph", component_property="figure")],
     [Input("month_dropdown", "value"),
@@ -200,7 +199,7 @@ def months_and_hours_graph(month, year):
             'yanchor': 'top'})
     return months_graph, hours_graph
 
-@dash_app.callback(
+@app.callback(
      Output("map_graph", "figure"),
      [Input("month_dropdown", "value"),
      Input("accidents_switch", "value"),
@@ -232,6 +231,5 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
     return fig
 
 if __name__ == "__main__":
-    #dash_app.run(debug=True)
-    #from waitress import serve
-    serve(dash_app.server, host="0.0.0.0", port=5000)
+    # Only for debugging while developing
+    app.run(debug=True)

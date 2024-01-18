@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./application /code/application
 
-CMD ["gunicorn", "--conf", "app/server-conf/gunicorn_conf.py", "--bind", "0.0.0.0:80", "application.main:dash_app"]
+CMD ["gunicorn", "--conf", "app/server-conf/gunicorn_conf.py", "--bind", "0.0.0.0:80", "application.main:app"]
 
 
 # Your Dockerfile code...
