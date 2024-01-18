@@ -1,14 +1,19 @@
-FROM tiangolo/uwsgi-nginx:python3.11
+FROM tiangolo/uwsgi-nginx-flask:python3.10
 
-WORKDIR /code
+COPY ./app /app
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-COPY ./application/requirements.txt /code/requirements.txt
+# FROM tiangolo/uwsgi-nginx:python3.11
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# WORKDIR /code
 
-COPY ./application /code/application
+# COPY ./application/requirements.txt /code/requirements.txt
 
-CMD ["gunicorn", "--conf", "app/server-conf/gunicorn_conf.py", "--bind", "0.0.0.0:80", "application.main:app"]
+# RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+# COPY ./application /code/application
+
+# CMD ["gunicorn", "--conf", "app/server-conf/gunicorn_conf.py", "--bind", "0.0.0.0:80", "application.main:app"]
 
 
 # Your Dockerfile code...
