@@ -13,6 +13,8 @@ COPY application/requirements.txt .
 
 COPY application/server-conf/nginx.conf /etc/nginx/
 
+COPY ./certs/ /etc/letsencrypt
+
 RUN pip3 install -r requirements.txt
 
 COPY application/ ./
