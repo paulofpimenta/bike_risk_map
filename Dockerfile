@@ -7,19 +7,22 @@ RUN pip3 install --upgrade pip
 
 #RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
-RUN mkdir wd
+RUN mkdir -p wd
+WORKDIR wd
 
-COPY application/requirements.txt .
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY application/server-conf/nginx.conf /etc/nginx/
-
+COPY application/ ./
+COPY requirements.txt .
+COPY server-conf/nginx.conf /etc/nginx/
 COPY ./certs/ /etc/letsencrypt
+
 
 RUN pip3 install -r requirements.txt
 
-COPY application/ ./
 
-WORKDIR wd
+
 
 #CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:80", "app:server"]
 #CMD ["waitress-serve" "--host=0.0.0.0" "--port=80"  "appname:app.server"]
