@@ -16,10 +16,10 @@ ENV PYTHONUNBUFFERED 1
 COPY application ./
 COPY ./certs/ /etc/letsencrypt
 
-WORKDIR wd/application
 
 RUN pip3 install -r requirements.txt
 
+WORKDIR wd/application
 
 
 
