@@ -16,30 +16,17 @@ os.chdir(dname)
 print("Working directory is : ", dname)
 
 
-def list_subdirectories(path):
-    subfolders = [f.path for f in os.scandir(path) if f.is_dir()]
-    for dirname in subfolders:
-        subfolders.extend(list_subdirectories(dirname))
-    return subfolders
-
-
-subdirectories = list_subdirectories(dname)
-print("And subfolders : ", subdirectories)
-
-
-
 
 flask_app = Flask(__name__)
 dash_app = Dash(__name__, server=flask_app,
                 external_stylesheets=external_stylesheets)
-#server = flask_app.server
 
-accidents_data = pd.read_csv("application/accidents_by_zone.csv", index_col=[0])
+accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
 
-arrondis_gdf = gpd.read_file("./data/arrondissements.geojson")
+arrondis_gdf = gpd.read_file("data/arrondissements.geojson")
 
-zones_gdf = gpd.read_file("application/data/zones.geojson")
+zones_gdf = gpd.read_file("data/zones.geojson")
 
 accidents_paris_ll = gpd.read_file("data/accidents_paris_ll.geojson")
 lats = accidents_paris_ll.get_coordinates().y.to_list()
@@ -243,10 +230,11 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
     return fig
 
 
-def create_app():
+def create_flask_app():
     return flask_app
 
 
 if __name__ == "__main__":
+    dash_app.run(debug=True)
     #from waitress import serve
     #serve(flask_app, host="0.0.0.0", port=80)
