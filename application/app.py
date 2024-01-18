@@ -231,7 +231,7 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
 
 def create_flask_app():
-    return flask_app
+    return dash_app
 
 
 if __name__ == "__main__":
