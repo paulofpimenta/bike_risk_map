@@ -11,19 +11,19 @@ import waitress
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 
-flask_app = Flask(__name__, port=80)
+flask_app = Flask(__name__)
 dash_app = Dash(__name__, server=flask_app,
                 external_stylesheets=external_stylesheets)
 #server = flask_app.server
 
-accidents_data = pd.read_csv("accidents_by_zone.csv", index_col=[0])
+accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
 
-arrondis_gdf = gpd.read_file("arrondissements.geojson")
+arrondis_gdf = gpd.read_file("data/arrondissements.geojson")
 
-zones_gdf = gpd.read_file("zones.geojson")
+zones_gdf = gpd.read_file("data/zones.geojson")
 
-accidents_paris_ll = gpd.read_file("accidents_paris_ll.geojson")
+accidents_paris_ll = gpd.read_file("data/accidents_paris_ll.geojson")
 lats = accidents_paris_ll.get_coordinates().y.to_list()
 lons = accidents_paris_ll.get_coordinates().x.to_list()
 
@@ -37,7 +37,7 @@ month_names_en = [calendar.month_name[i] for i in range(1, 13)]
 
 ordered_month_list_translated = {month_names_en[i]:month_fr for i,month_fr in enumerate(months_order_fr)}
 
-with open("./zones.json") as response:
+with open("data/zones.json") as response:
     zones = json.load(response)
 
 # APP Layout
@@ -231,4 +231,4 @@ def create_app():
 
 if __name__ == "__main__":
     from waitress import serve
-    serve(flask_app, host="app2.ouicodedata.com", port=80)
+    serve(flask_app, host="0.0.0.0", port=80)
