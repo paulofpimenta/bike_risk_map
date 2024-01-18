@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/letsencrypt # for certboot challenges
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
-    #  - ./etc/ssl/certs:/etc/ssl/certs
+      - ./etc/ssl/certs:/etc/ssl/certs
   certbot:
     image: certbot/certbot
     volumes:
