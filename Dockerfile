@@ -1,6 +1,8 @@
 FROM nginx:1.15-alpine
 
 #RUN add-apt-repository ppa:certbot/certbot
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends python3
 RUN pip3 install --upgrade pip
 #RUN pip3 install waitress
 
