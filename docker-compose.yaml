@@ -3,8 +3,8 @@ version: '3'
 services:
   webserver:
     image: nginx:latest
-    # ports:
-    #  - 80:80
+      ports:
+      - 80:80
     #  - 443:443
     #volumes:
     #  - ./docker/nginx/:/etc/nginx/conf.d
