@@ -14,6 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 COPY application/ ./
+RUN ls
 COPY application/requirements.txt .
 COPY application/server-conf/nginx.conf /etc/nginx/
 COPY ./certs/ /etc/letsencrypt
