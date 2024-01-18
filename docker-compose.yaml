@@ -12,9 +12,17 @@ services:
     networks:
       - network 
     command: waitress-serve --call "app:create_app"
-
-
-      
+  
 networks:
   network:
     driver: bridge
+
+  certbot:
+    container_name: "certbot"
+    image: certbot/certbot
+    volumes:
+      - .:/letsencrypt
+      - ./certs:/etc/letsencrypt
+    command: certonly --webroot -w /letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com --force-renew --agree-tos --email pfpimenta@gmail.com
+    depends_on:
+      - dashboard
