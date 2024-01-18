@@ -5,8 +5,7 @@ import pandas as pd
 import geopandas as gpd
 import dash_bootstrap_components as dbc
 import calendar
-from flask import Flask
-import waitress
+from waitress import serve
 import os
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
@@ -16,8 +15,9 @@ os.chdir(dname)
 print("Working directory is : ", dname)
 
 
+#app = Flask(__name__)
 
-dash_app = Dash(__name__,external_stylesheets=external_stylesheets)
+dash_app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
@@ -72,10 +72,10 @@ controls = dbc.Card(
                 dbc.Label("Year"),
                 dcc.Dropdown(
                     id='year_dropdown',
-                    options=[{'label':year, 'value': year} for year in available_years],
+                    options=[{'label': year, 'value': year} for year in available_years],
                     multi=False,
                     clearable=False,
-                    value = list(year_month_dict.keys())[0],
+                    value= list(year_month_dict.keys())[0],
                     style={"width": "70%"}
                 ),
                 html.Br(),
@@ -94,7 +94,7 @@ controls = dbc.Card(
                         {"label": "Total number", "value": 'num_acc_by_area'},
                         {"label": "Gravity", "value": 'grav_mean'},
                     ],
-                value='num_acc_by_area',
+                    value='num_acc_by_area',
                 ),
                 html.Br(),
                 dbc.Label("Show accident's locations ?"),
@@ -151,7 +151,6 @@ def update_date_dropdown(selected_year):
     Input('month_dropdown', 'options'))
 def update_month_drowdown(available_options):
     return available_options[0]['value']
-waitress
 
 # Callback functions
 @dash_app.callback(
@@ -163,7 +162,7 @@ def months_and_hours_graph(month, year):
     selected_year = year if year else 2011
     selected_month = month if month else year_month_dict[selected_year][0]
     selected_month_en = month_names_en[months_dict[month]]
-    print("Selected year and month(en) and month (fr) : " , selected_year, selected_month, selected_month_en)
+    print("Selected year and month(en) and month (fr) : ", selected_year, selected_month, selected_month_en)
     # Filter year
     accidents_paris_ll_by_year = accidents_paris_ll.loc[(accidents_paris_ll['an'] == int(selected_year))]
     # Filter month
@@ -190,11 +189,7 @@ def months_and_hours_graph(month, year):
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'})
-
-    
     return months_graph, hours_graph
-    
-
 
 @dash_app.callback(
      Output("map_graph", "figure"),
@@ -227,12 +222,7 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
     return fig
 
-
-def create_flask_app():
-    return dash_app
-
-
 if __name__ == "__main__":
-    dash_app.run(debug=True)
+    #dash_app.run(debug=True)
     #from waitress import serve
-    #serve(flask_app, host="0.0.0.0", port=80)
+    serve(dash_app.server, host="0.0.0.0", port=5000)
