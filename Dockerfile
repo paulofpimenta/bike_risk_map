@@ -11,8 +11,10 @@ RUN letsencrypt certonly -a webroot --webroot-path=/var/www/app2.ouicodedata.com
 RUN mkdir wd
 
 COPY application/requirements.txt .
-COPY nginx.conf /etc/nginx/
-COPY uwsgi.ini /etc/uwsgi/
+
+COPY application/server-conf/nginx.conf /etc/nginx/
+COPY application/server-conf/uwsgi.ini /etc/uwsgi/
+COPY application/server-conf/supervisord.conf /etc/supervisor/
 
 RUN pip3 install -r requirements.txt
 
