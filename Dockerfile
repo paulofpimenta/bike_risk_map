@@ -9,6 +9,7 @@ RUN pip3 install --upgrade pip
 #RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
 RUN mkdir -p wd
+WORKDIR wd
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -19,7 +20,6 @@ COPY ./certs/ /etc/letsencrypt
 
 RUN pip3 install -r requirements.txt
 
-WORKDIR wd
 
 RUN ls --recursive /wd/
 
