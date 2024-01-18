@@ -24,6 +24,8 @@ RUN apt update && apt install -y python3-pip \
 
 RUN ls --recursive /wd/
 
+CMD ["nginx", "-g", "daemon off;"]
+
 EXPOSE 80
 
 CMD ["python3","app.py"]
