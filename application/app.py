@@ -15,6 +15,20 @@ dname = os.path.dirname(abspath)
 os.chdir(dname)
 print("Working directory is : ", dname)
 
+
+def list_subdirectories(path):
+    subfolders = [f.path for f in os.scandir(path) if f.is_dir()]
+    for dirname in subfolders:
+        subfolders.extend(list_subdirectories(dirname))
+    return subfolders
+
+
+subdirectories = list_subdirectories(dname)
+print("And subfolders : ", subdirectories)
+
+
+
+
 flask_app = Flask(__name__)
 dash_app = Dash(__name__, server=flask_app,
                 external_stylesheets=external_stylesheets)
