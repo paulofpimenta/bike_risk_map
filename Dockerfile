@@ -4,6 +4,7 @@ FROM python:3.10-slim-buster
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends python3-certbot-nginx
 RUN pip3 install --upgrade pip
+RUN pip3 install waitress
 
 #RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
