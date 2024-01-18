@@ -10,7 +10,7 @@ services:
       dockerfile: ./docker/dash/Dockerfile
     ports:
       - "8000:8000"
-    command: gunicorn -w 1 -b :8000 app:server
+    command: gunicorn -w 1 -b :8000 main:server
   
   web:
     container_name: "web"
@@ -26,7 +26,7 @@ services:
       - ./etc/ssl/certs:/etc/ssl/certs
     depends_on:
       - dash_app
-      
+
   # certbot:
   #   image: certbot/certbot
   #   volumes:
