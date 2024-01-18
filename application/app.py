@@ -17,9 +17,7 @@ print("Working directory is : ", dname)
 
 
 
-flask_app = Flask(__name__)
-dash_app = Dash(__name__, server=flask_app,
-                external_stylesheets=external_stylesheets)
+dash_app = Dash(__name__,external_stylesheets=external_stylesheets)
 
 accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
