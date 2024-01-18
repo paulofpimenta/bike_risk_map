@@ -16,12 +16,12 @@ dash_app = Dash(__name__, server=flask_app,
                 external_stylesheets=external_stylesheets)
 #server = flask_app.server
 
-accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
+accidents_data = pd.read_csv("application/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
 
-arrondis_gdf = gpd.read_file("data/arrondissements.geojson")
+arrondis_gdf = gpd.read_file("./data/arrondissements.geojson")
 
-zones_gdf = gpd.read_file("data/zones.geojson")
+zones_gdf = gpd.read_file("application/data/zones.geojson")
 
 accidents_paris_ll = gpd.read_file("data/accidents_paris_ll.geojson")
 lats = accidents_paris_ll.get_coordinates().y.to_list()
