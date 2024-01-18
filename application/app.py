@@ -7,9 +7,13 @@ import dash_bootstrap_components as dbc
 import calendar
 from flask import Flask
 import waitress
+import os
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
-
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+print("Working directory is : ", dname)
 
 flask_app = Flask(__name__)
 dash_app = Dash(__name__, server=flask_app,
