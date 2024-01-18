@@ -11,23 +11,9 @@ services:
       - 5000:80
     networks:
       - network 
-     volumes:
-      - .:/letsencrypt # for certboot challenges
-      - ./certs:/etc/letsencrypt # for letsencrypt certificates
-      - ./etc/ssl/certs:/etc/ssl/certs
     command: waitress-serve --call "app:create_app"
 
 
-    # certbot:
-  #   container_name: "certbot"
-  #   image: certbot/certbot
-  #   volumes:
-  #     - .:/letsencrypt
-  #     - ./certs:/etc/letsencrypt
-  #   command: certonly --webroot -w /letsencrypt -d app1.ouicodedata.com -d www.app1.ouicodedata.com --force-renew --agree-tos --email pfpimenta@gmail.com
-  #   depends_on:
-  #     - fastapi
-  #     - web
       
 networks:
   network:
