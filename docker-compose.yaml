@@ -2,7 +2,7 @@ version: '3'
 
 services:
   webserver:
-    image: nginx:1.15-alpine
+    image: nginx:latest
     ports:
       - 80:80
       - 443:443
@@ -10,7 +10,7 @@ services:
       - ./docker/nginx/:/etc/nginx/conf.d
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
       - ./etc/ssl/certs:/etc/ssl/certs
-  certbot:
-    image: certbot/certbot
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+  #certbot:
+  #  image: certbot/certbot
+  #    - ./data/certbot/conf:/etc/letsencrypt
+  #    - ./data/certbot/www:/var/www/certbot
