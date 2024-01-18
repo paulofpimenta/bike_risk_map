@@ -13,10 +13,7 @@ RUN mkdir -p wd
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY application/ ./
-RUN ls
-COPY application/requirements.txt .
-COPY application/server-conf/nginx.conf /etc/nginx/
+COPY application ./
 COPY ./certs/ /etc/letsencrypt
 
 WORKDIR wd/application
