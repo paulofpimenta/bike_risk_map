@@ -1,10 +1,5 @@
 FROM nginx/unit:1.23.0-python3.9
 
-#RUN add-apt-repository ppa:certbot/certbot
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends python3
-RUN pip3 install --upgrade pip
-#RUN pip3 install waitress
 
 #RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
