@@ -1,5 +1,4 @@
-version: '3.8'
-name: bike-risk
+version: '3'
 
 services:
   webserver:
