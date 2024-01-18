@@ -1,17 +1,32 @@
-version: '3'
+version: "3"
 
 services:
-  webserver:
-    image: nginx:latest
+  nginx:
+    container_name: "nginx_server"
+    build:
+      context: ./config
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - ./config:/config
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /tmp/acme-challenge:/tmp/acme-challenge
+    networks:
+      - app
     restart: always
+
+  letsencrypt:
+    container_name: "certbot"
+    image: certbot/certbot
+    command: sh -c "certbot certonly --webroot -w /tmp/acme-challenge/ -d test.mrshanas.com --text --agree-tos --email shanas@mrshanas.com --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges=http"
+    entrypoint: ""
     volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./certbot/www/:/var/www/certbot/:ro
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+      - "/etc/letsencrypt:/etc/letsencrypt"
+      - "/tmp/acme-challenge:/tmp/acme-challenge"
+    environment:
+      - TERM=xterm
+
+networks:
+  app:
+    driver: bridge
