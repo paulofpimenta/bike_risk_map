@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/letsencrypt # for certboot challenges
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
-      - ./etc/ssl/certs:/etc/ssl/certs
+#      - ./etc/ssl/certs:/etc/ssl/certs
 
 
   certbot:
@@ -21,6 +21,7 @@ services:
     volumes:
       - .:/letsencrypt
       - ./certs:/etc/letsencrypt
+      - ./etc/ssl/certs:/etc/ssl/certs
     command: certonly --webroot -w /letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com --force-renew --agree-tos --email pfpimenta@gmail.com
-    depends_on:
-      - dashboard
+    #depends_on:
+    #  - dashboard
