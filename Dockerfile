@@ -1,31 +1,43 @@
-FROM nginx/unit:1.23.0-python3.9
+FROM tiangolo/uwsgi-nginx:python3.11
+
+WORKDIR /code
+
+COPY ./application/requirements.txt /code/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+COPY ./application /code/application
+
+CMD ["gunicorn", "--conf", "app/server-conf/gunicorn_conf.py", "--bind", "0.0.0.0:80", "application.main:dash_app"]
 
 
-#RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
+# Your Dockerfile code...
 
-RUN mkdir -p wd
-WORKDIR wd
-
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-COPY application ./
-
-COPY application/server-conf/nginx.conf /etc/nginx/
-
-COPY ./certs/ /etc/letsencrypt
+# FROM nginx/unit:1.23.0-python3.9
 
 
-RUN apt update && apt install -y python3-pip \
-    && pip3 install -r requirements.txt \                               
-    && apt remove -y python3-pip \                                              
-    && apt autoremove --purge -y \                                             
-    && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
+# #RUN letsencrypt certonly -a webroot --webroot-path=/letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com
 
-RUN ls --recursive /wd/
+# RUN mkdir -p wd
+# WORKDIR wd
 
-CMD ["nginx", "-g", "daemon off;"]
+# COPY application ./
 
-EXPOSE 80
+# COPY application/server-conf/nginx.conf /etc/nginx/
 
-CMD ["python3","app.py"]
+# COPY ./certs/ /etc/letsencrypt
+
+
+# RUN apt update && apt install -y python3-pip \
+#     && pip3 install -r requirements.txt \                               
+#     && apt remove -y python3-pip \                                              
+#     && apt autoremove --purge -y \                                             
+#     && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/*.list
+
+# RUN ls --recursive /wd/
+
+# CMD ["nginx", "-g", "daemon off;"]
+
+# EXPOSE 80
+
+# CMD ["python3","app.py"]
