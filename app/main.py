@@ -24,8 +24,9 @@ def list_subdirectories(path):
 subdirectories = list_subdirectories(dname)
 print(subdirectories)
 
-app = Flask(__name__)
-dash_app = Dash(__name__, server=app, external_stylesheets=external_stylesheets)
+server = Flask(__name__)
+
+dash_app = Dash(__name__, server=server, external_stylesheets=external_stylesheets)
 
 accidents_data = pd.read_csv("app_data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
@@ -232,4 +233,4 @@ def display_selected_data(points_month,accidents_switch,agg_data_radioitem):
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(debug=True,host="0.0.0.0", port=8080, use_reloader=False)
+    app.run(debug=True)
