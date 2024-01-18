@@ -11,7 +11,6 @@ ENV PYTHONUNBUFFERED 1
 
 COPY application ./
 
-RUN rm /etc/nginx/conf.d/default.conf
 COPY application/server-conf/nginx.conf /etc/nginx/
 
 COPY ./certs/ /etc/letsencrypt
