@@ -3,13 +3,13 @@ version: '3'
 services:
   webserver:
     image: nginx:latest
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./docker/nginx/:/etc/nginx/conf.d
-      - ./certs:/etc/letsencrypt # for letsencrypt certificates
-      - ./etc/ssl/certs:/etc/ssl/certs
+    # ports:
+    #  - 80:80
+    #  - 443:443
+    #volumes:
+    #  - ./docker/nginx/:/etc/nginx/conf.d
+    #  - ./certs:/etc/letsencrypt # for letsencrypt certificates
+    #  - ./etc/ssl/certs:/etc/ssl/certs
   #certbot:
   #  image: certbot/certbot
   #    - ./data/certbot/conf:/etc/letsencrypt
