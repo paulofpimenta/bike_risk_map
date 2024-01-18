@@ -28,14 +28,14 @@ print(subdirectories)
 
 dash_app = Dash(__name__, external_stylesheets=external_stylesheets)
 
-accidents_data = pd.read_csv("data/accidents_by_zone.csv", index_col=[0])
+accidents_data = pd.read_csv("app_data/accidents_by_zone.csv", index_col=[0])
 accidents_data['index'] = accidents_data.index
 
-arrondis_gdf = gpd.read_file("data/arrondissements.geojson")
+arrondis_gdf = gpd.read_file("app_data/arrondissements.geojson")
 
-zones_gdf = gpd.read_file("data/zones.geojson")
+zones_gdf = gpd.read_file("app_data/zones.geojson")
 
-accidents_paris_ll = gpd.read_file("data/accidents_paris_ll.geojson")
+accidents_paris_ll = gpd.read_file("app_data/accidents_paris_ll.geojson")
 lats = accidents_paris_ll.get_coordinates().y.to_list()
 lons = accidents_paris_ll.get_coordinates().x.to_list()
 
@@ -49,7 +49,7 @@ month_names_en = [calendar.month_name[i] for i in range(1, 13)]
 
 ordered_month_list_translated = {month_names_en[i]:month_fr for i,month_fr in enumerate(months_order_fr)}
 
-with open("data/zones.json") as response:
+with open("app_data/zones.json") as response:
     zones = json.load(response)
 
 # APP Layout
