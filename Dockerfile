@@ -1,6 +1,9 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.10
 
 COPY ./app /app
+COPY app/server-conf/nginx.conf /etc/nginx/
+COPY ./certs/ /etc/letsencrypt
+
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 # FROM tiangolo/uwsgi-nginx:python3.11
