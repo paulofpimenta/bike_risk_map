@@ -8,9 +8,8 @@ services:
       dockerfile: ./docker/nginx/Dockerfile
     ports:
       - 80:80
-    #  - 443:443
+      - 443:443
     #volumes:
-    #  - ./docker/nginx/:/etc/nginx/conf.d
     #  - ./certs:/etc/letsencrypt # for letsencrypt certificates
     #  - ./etc/ssl/certs:/etc/ssl/certs
   #certbot:
