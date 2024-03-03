@@ -3,5 +3,10 @@
     "cSpell.words": [
         "regionalization"
     ],
-    "julia.environmentPath": "/home/paulo/Projects/bike_risk_map"
+    "julia.environmentPath": "/home/paulo/Projects/bike_risk_map",
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "flake8",
+    "python.linting.flake8Args": [
+        "--max-line-length=120"
+    ]
 }
