@@ -23,8 +23,7 @@ services:
     volumes:
       - .:/letsencrypt # for certboot challenges
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
-      - ./etc/ssl/certs:/etc/ssl/certs56h7j
-      8k]67653
+      - ./etc/ssl/certs:/etc/ssl/certs
     depends_on:
       - dash_app
 
