@@ -30,4 +30,4 @@ services:
     volumes:
       - .:/letsencrypt
       - ./certs:/etc/letsencrypt
-    command: certonly --webroot -w /letsencrypt -d ${DOMAIN1} -d ${DOMAIN2} --force-renew --agree-tos --email ${EMAIL}
+    command: certonly --webroot -w /letsencrypt -d ${DOMAIN1} --force-renew --agree-tos --email ${EMAIL}
