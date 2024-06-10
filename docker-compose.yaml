@@ -23,7 +23,8 @@ services:
     volumes:
       - .:/letsencrypt # for certboot challenges
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
-      - ./etc/ssl/certs:/etc/ssl/certs
+      - ./etc/ssl/certs:/etc/ssl/certs56h7j
+      8k]67653
     depends_on:
       - dash_app
 
@@ -32,4 +33,4 @@ services:
     volumes:
       - .:/letsencrypt
       - ./certs:/etc/letsencrypt
-    command: certonly --webroot -w /letsencrypt -d app2.ouicodedata.com -d www.app2.ouicodedata.com --force-renew --agree-tos --email pfpimenta@gmail.com
+    command: certonly --webroot -w /letsencrypt -d ${DOMAIN1} -d ${DOMAIN2} --force-renew --agree-tos --email ${EMAIL}
