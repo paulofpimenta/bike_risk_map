@@ -24,12 +24,10 @@ services:
       - .:/letsencrypt # for certboot challenges
       - ./certs:/etc/letsencrypt # for letsencrypt certificates
       - ./etc/ssl/certs:/etc/ssl/certs
-    depends_on:
-      - dash_app
 
-  # certbot:
-  #   image: certbot/certbot
-  #   volumes:
-  #     - .:/letsencrypt
-  #     - ./certs:/etc/letsencrypt
-  #   command: certonly --webroot -w /letsencrypt -d ${DOMAIN1} -d ${DOMAIN2} --force-renew --agree-tos --email ${EMAIL}
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - .:/letsencrypt
+      - ./certs:/etc/letsencrypt
+    command: certonly --webroot -w /letsencrypt -d ${DOMAIN1} -d ${DOMAIN2} --force-renew --agree-tos --email ${EMAIL}
