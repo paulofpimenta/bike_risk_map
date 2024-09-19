@@ -26,6 +26,7 @@ services:
       - ./etc/ssl/certs:/etc/ssl/certs
 
   certbot:
+    container_name: certbot
     image: certbot/certbot
     volumes:
       - .:/letsencrypt
